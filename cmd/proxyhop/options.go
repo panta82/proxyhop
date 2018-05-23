@@ -16,6 +16,8 @@ type options struct {
 		Target string `description:"Target URL for proxying. URL paths will be appended" positional-arg-name:"TARGET"`
 	} `positional-args:"yes" required:"1"`
 
+	NoCORSBusting bool `long:"--disable-cors-busting" description:"Disable special CORS handling, just pass the requests normally"`
+
 	Help bool `short:"h" long:"help" description:"Show this help message"`
 }
 

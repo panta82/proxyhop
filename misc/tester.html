@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"
+			content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Test ajax</title>
+	<style>
+		#res {
+			height: 50vh;
+			background: #eee;
+			padding: 20px;
+			overflow: auto;
+		}
+	</style>
+</head>
+<body>
+<div>
+	<button type="button" id="btn">Fetch</button>
+	<hr />
+	<pre id="res"></pre>
+</div>
+
+<script>
+	document.getElementById('btn').addEventListener('click', () => {
+		fetch('http://localhost:10000').then(res => res.text()).then(txt => {
+		    document.getElementById('res').innerText = txt;
+		});
+	});
+</script>
+</body>
+</html>

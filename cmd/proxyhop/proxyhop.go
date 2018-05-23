@@ -13,6 +13,7 @@ func main() {
 		Target: options.Positional.Target,
 		Port: options.Port,
 		Verbosity: len(options.Verbosity),
+		CORSBusting: !options.NoCORSBusting,
 	}
 
 	err := proxy.Start()

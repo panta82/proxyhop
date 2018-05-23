@@ -2,16 +2,17 @@ package proxy
 
 import (
 	"net/http"
-	"io/ioutil"
 	"fmt"
 	. "proxyhop/tools"
 	"io"
+	"github.com/rs/cors"
 )
 
 type Proxy struct {
 	Target string
 	Port string
 	Verbosity int
+	CORSBusting bool
 }
 
 func (p Proxy) Start() error {
@@ -42,6 +43,10 @@ func (p Proxy) Start() error {
 
 		for k, vList := range r.Header {
 			for _, v := range vList {
+				if k == "Accept-Encoding" {
+					// TODO: Support GZIP
+					continue
+				}
 				req.Header.Add(k, v)
 			}
 		}
@@ -61,6 +66,7 @@ func (p Proxy) Start() error {
 			}
 		}
 
+		defer resp.Body.Close()
 		io.Copy(w, resp.Body)
 
 		if p.Verbosity > 0 {
@@ -68,21 +74,12 @@ func (p Proxy) Start() error {
 		}
 	}
 
-	return http.ListenAndServe(fmt.Sprintf(":%s", p.Port), http.HandlerFunc(requestHandler))
-}
+	handlerFunc := http.HandlerFunc(requestHandler)
 
-func (p Proxy) SendRequest() error {
-	resp, err := http.Get(p.Target)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return err
+	if p.CORSBusting {
+		tmp := cors.AllowAll().Handler(handlerFunc)
+		handlerFunc = (tmp).(http.HandlerFunc)
 	}
 
-	fmt.Println(body)
-	return nil
+	return http.ListenAndServe(fmt.Sprintf(":%s", p.Port), handlerFunc)
 }
