@@ -10,11 +10,13 @@ func main() {
 	options := loadOptions(os.Args[1:])
 
 	proxy := Proxy {
-		Target: options.Target,
+		Target: options.Positional.Target,
+		Port: options.Port,
+		Verbosity: len(options.Verbosity),
 	}
 
-	err := proxy.SendRequest()
+	err := proxy.Start()
 	if err != nil {
-		tools.FatalError("Proxy request failed", &err)
+		tools.FatalError("Proxy has crashed", &err)
 	}
 }

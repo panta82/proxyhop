@@ -7,15 +7,25 @@ import (
 	"strings"
 )
 
-func FatalError(message string, err *error) {
-	fmt.Fprintf(os.Stderr,"%s %s\n", FatalText("FATAL"), DangerText(message))
+func doPrintError(label string, message string, err *error, stack string) {
+	labelStandIn := strings.Repeat(" ", len(label))
+	fmt.Fprintf(os.Stderr,"%s %s\n", DangerLabel(label), DangerText(message))
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s %s\n", FatalText("     "), DangerText((*err).Error()))
+		fmt.Fprintf(os.Stderr, "%s %s\n", DangerLabel(labelStandIn), DangerText((*err).Error()))
 
-		stack := string(debug.Stack())
-		for _, line := range strings.Split(stack, "\n") {
-			fmt.Fprintf(os.Stderr, "%s %s\n", FatalText("     "), line)
+		for index, line := range strings.Split(stack, "\n") {
+			if index > 0 {
+				fmt.Fprintf(os.Stderr, "%s %s\n", DangerLabel(labelStandIn), line)
+			}
 		}
 	}
+}
+
+func PrintError(message string, err *error) {
+	doPrintError("ERROR", message, err, string(debug.Stack()))
+}
+
+func FatalError(message string, err *error) {
+	doPrintError("FATAL", message, err, string(debug.Stack()))
 	os.Exit(1)
 }

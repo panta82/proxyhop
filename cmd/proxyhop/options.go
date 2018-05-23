@@ -7,8 +7,8 @@ import (
 	. "proxyhop/tools"
 )
 
-type argumentsDefinition struct {
-	Verbose []bool `short:"v" long:"verbose" description:"Show verbose log messages"`
+type options struct {
+	Verbosity []bool `short:"v" long:"verbose" description:"Show verbose log messages"`
 
 	Port string `short:"p" long:"port" description:"Port to listen on" default:"10000"`
 
@@ -19,20 +19,14 @@ type argumentsDefinition struct {
 	Help bool `short:"h" long:"help" description:"Show this help message"`
 }
 
-type Options struct {
-	Verbose int
-	Port string
-	Target string
-}
+func loadOptions(args []string) options {
+	var opts options
 
-func loadOptions(args []string) Options {
-	var parsedArgs argumentsDefinition
-
-	parser := flags.NewParser(&parsedArgs, flags.PassDoubleDash)
+	parser := flags.NewParser(&opts, flags.PassDoubleDash)
 
 	_, err := parser.ParseArgs(args)
 
-	if parsedArgs.Help {
+	if opts.Help {
 		parser.WriteHelp(os.Stdout)
 		fmt.Printf(`
 Examples:
@@ -43,14 +37,8 @@ Examples:
 	}
 
 	if err != nil {
-		fmt.Fprintln(os.Stderr, DangerText(err.Error()))
+		PrintError(err.Error(), nil)
 		os.Exit(1)
-	}
-
-	opts := Options{
-		Verbose: len(parsedArgs.Verbose),
-		Port: parsedArgs.Port,
-		Target: parsedArgs.Positional.Target,
 	}
 
 	return opts
