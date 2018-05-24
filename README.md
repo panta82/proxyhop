@@ -2,7 +2,7 @@
 
 Super simple command line proxy, suitable for CORS busting
 
-Usage:
+### Usage:
 
 ```
 proxyhop -p 12345 https://api.someapi.com/v1
@@ -14,4 +14,10 @@ Query string and headers should all work.
 
 That's all there is to it.
 
-##### NOTE: Still WIP
+### Installation
+
+Download one of the releases, make it executable and add it somewhere in PATH
+
+### License
+
+MIT
