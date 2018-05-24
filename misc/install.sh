@@ -37,7 +37,7 @@ fi
 
 url="https://github.com/panta82/proxyhop/releases/download/${VERSION}/proxyhop_${VERSION}_${os}_${arch}"
 echo "Downloading proxyhop $VERSION from $url"
-curl -s -L $url --output /usr/local/bin/proxyhop || fatal "Failed to download proxyhop to /usr/local/bin/proxyhop"
+curl -sf -L $url --output /usr/local/bin/proxyhop || fatal "Failed to download proxyhop to /usr/local/bin/proxyhop"
 
 chmod +x /usr/local/bin/proxyhop
 
