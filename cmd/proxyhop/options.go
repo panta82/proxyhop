@@ -20,6 +20,8 @@ type options struct {
 
 	NoCORSBusting bool `long:"--disable-cors-busting" description:"Disable special CORS handling, just pass the requests normally"`
 
+	Version bool `short:"V" long:"version" description:"Show program version and exit"`
+
 	Help bool `short:"h" long:"help" description:"Show this help message"`
 }
 
@@ -29,7 +31,7 @@ func (opts options) getVerbosity() int {
 	return 1
 }
 
-func loadOptions(args []string) options {
+func loadOptions(args []string, version string) options {
 	var opts options
 
 	parser := flags.NewParser(&opts, flags.PassDoubleDash)
@@ -43,6 +45,11 @@ Example:
   %s
   (Proxy requests from http://localhost:12345/$x to https://google.com/$x)  
 `, EmText("proxyhop -p 12345 https://google.com"))
+		os.Exit(0)
+	}
+
+	if opts.Version {
+		fmt.Printf("proxyhop %s\nby Pantas, 2018\n", version)
 		os.Exit(0)
 	}
 

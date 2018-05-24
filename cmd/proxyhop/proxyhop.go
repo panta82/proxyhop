@@ -6,8 +6,14 @@ import (
 	"proxyhop/tools"
 )
 
+var version string
+
 func main() {
-	options := loadOptions(os.Args[1:])
+	if version == "" {
+		version = "0.0"
+	}
+
+	options := loadOptions(os.Args[1:], version)
 
 	proxy := Proxy {
 		Target: options.Positional.Target,

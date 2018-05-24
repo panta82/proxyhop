@@ -17,7 +17,7 @@ function build() {
 	local arch="$2"
 	filename="proxyhop_${VERSION}_${os}_${arch}"
 	echo "${filename}"
-	GOOS=${os} GOARCH=${arch} go build -o ${RELEASE_DIR}/${filename} proxyhop/cmd/proxyhop
+	GOOS=${os} GOARCH=${arch} go build -o ${RELEASE_DIR}/${filename} -ldflags "-X main.version=${VERSION}" proxyhop/cmd/proxyhop
 	chmod +x ${RELEASE_DIR}/${filename}
 }
 
