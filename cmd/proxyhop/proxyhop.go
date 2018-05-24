@@ -12,7 +12,7 @@ func main() {
 	proxy := Proxy {
 		Target: options.Positional.Target,
 		Port: options.Port,
-		Verbosity: len(options.Verbosity),
+		Verbosity: options.getVerbosity(),
 		CORSBusting: !options.NoCORSBusting,
 	}
 

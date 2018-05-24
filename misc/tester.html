@@ -24,7 +24,7 @@
 
 <script>
 	document.getElementById('btn').addEventListener('click', () => {
-		fetch('http://localhost:10000').then(res => res.text()).then(txt => {
+		fetch('http://localhost:10000?test#fragment').then(res => res.text()).then(txt => {
 		    document.getElementById('res').innerText = txt;
 		});
 	});

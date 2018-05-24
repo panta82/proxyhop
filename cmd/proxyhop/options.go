@@ -8,7 +8,9 @@ import (
 )
 
 type options struct {
-	Verbosity []bool `short:"v" long:"verbose" description:"Show verbose log messages"`
+	Verbose bool `short:"v" long:"verbose" description:"Show verbose log messages (including request bodies)"`
+
+	Quiet bool `short:"q" long:"quiet" description:"Disable log output"`
 
 	Port string `short:"p" long:"port" description:"Port to listen on" default:"10000"`
 
@@ -21,6 +23,12 @@ type options struct {
 	Help bool `short:"h" long:"help" description:"Show this help message"`
 }
 
+func (opts options) getVerbosity() int {
+	if opts.Verbose { return 2 }
+	if opts.Quiet { return 0 }
+	return 1
+}
+
 func loadOptions(args []string) options {
 	var opts options
 
@@ -31,10 +39,10 @@ func loadOptions(args []string) options {
 	if opts.Help {
 		parser.WriteHelp(os.Stdout)
 		fmt.Printf(`
-Examples:
+Example:
   %s
-  Proxy requests from http://localhost:12345/$x to https://google.com/$x  
-`, EmText("> proxyhop -p 12345 https://google.com"))
+  (Proxy requests from http://localhost:12345/$x to https://google.com/$x)  
+`, EmText("proxyhop -p 12345 https://google.com"))
 		os.Exit(0)
 	}
 

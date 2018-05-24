@@ -6,6 +6,7 @@ import (
 	. "proxyhop/tools"
 	"io"
 	"github.com/rs/cors"
+	"time"
 )
 
 type Proxy struct {
@@ -21,23 +22,34 @@ func (p Proxy) Start() error {
 		baseUrl = baseUrl[:len(p.Target) - 1]
 	}
 
-	fmt.Printf("Proxying %s ---> %s\n\n", EmText("http://localhost:" + p.Port), EmText(baseUrl))
+	if p.Verbosity > 0 {
+		fmt.Printf("Proxying %s ---> %s\n\n", EmText("http://localhost:" + p.Port), EmText(baseUrl))
+	}
 
 	requestHandler := func (w http.ResponseWriter, r *http.Request) {
-		destUrl := baseUrl + r.URL.Path
+		start := time.Now()
 
-		onError := func(err error, statusCode int) {
+		destUrl := baseUrl + r.URL.Path
+		if r.URL.RawQuery != "" {
+			destUrl += "?" + r.URL.RawQuery
+		}
+		if r.URL.Fragment != "" {
+			// This will probably never happen, but can't hurt to add
+			destUrl += "#" + r.URL.Fragment
+		}
+
+		onError := func(err error) {
 			if p.Verbosity > 0 {
 				PrintError(fmt.Sprintf("%s", destUrl), &err)
 			}
 
-			w.WriteHeader(statusCode)
+			w.WriteHeader(500)
 			w.Write([]byte(err.Error()))
 		}
 
 		req, err := http.NewRequest(r.Method, destUrl, r.Body)
 		if err != nil {
-			onError(err, 500)
+			onError(err)
 			return
 		}
 
@@ -55,7 +67,7 @@ func (p Proxy) Start() error {
 		resp, err := http.DefaultClient.Do(req)
 
 		if err != nil {
-			onError(err, resp.StatusCode)
+			onError(err)
 			return
 		}
 
@@ -70,7 +82,11 @@ func (p Proxy) Start() error {
 		io.Copy(w, resp.Body)
 
 		if p.Verbosity > 0 {
-			fmt.Printf(fmt.Sprintf("%s %s %s %s\n", r.Method, destUrl, MutedText(" --> "), resp.Status))
+			now := time.Now()
+			elapsed := float64(now.Sub(start)) / float64(time.Second)
+			timeArrow := MutedText(fmt.Sprintf(">--(%.2f ms)-->", elapsed))
+			fmt.Printf(fmt.Sprintf("[%s] %s %s %s %s\n", MutedText(now.Format("2006-01-02 15:04:05")),
+				r.Method, destUrl, timeArrow, resp.Status))
 		}
 	}
 
