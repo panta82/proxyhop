@@ -8,15 +8,21 @@ Super simple command line proxy, suitable for CORS busting
 proxyhop -p 12345 https://api.someapi.com/v1
 ```
 
-Then make requests against `localhost:12345`. Path will be appended (eg. http://localhost:12345/a/b/c will translate to https://api.someapi.com/v1/a/b/c)
-
-Query string and headers should all work.
+Then make requests against http://localhost:12345. They will be passed through to https://api.someapi.com/v1. Path and query string will be preserved (eg. http://localhost:12345/a/b/c will translate to https://api.someapi.com/v1/a/b/c)
 
 That's all there is to it.
 
 ### Installation
 
-Download one of the releases, make it executable and add it somewhere in PATH
+Builds are available for Linux (amd64, x86) and macOS (amd64).
+
+For an easy automated install, paste this into your terminal.
+
+```
+curl -sf -L https://raw.githubusercontent.com/panta82/proxyhop/master/misc/install.sh | sudo bash
+```
+
+If you don't trust the script, you can manually download one of the [releases](releases), make it executable and copy it somewhere in your `PATH`.
 
 ### License
 
