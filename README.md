@@ -24,7 +24,7 @@ For an easy automated install, paste this into your terminal.
 curl -sf -L https://raw.githubusercontent.com/panta82/proxyhop/master/misc/install.sh | sudo bash
 ```
 
-If you don't trust the script, you can manually download one of the [releases](releases), make it executable and copy it somewhere in your `PATH`.
+If you don't trust the script, you can manually download one of the [releases](/panta82/proxyhop/releases), make it executable and copy it somewhere in your `PATH`.
 
 ### License
 
