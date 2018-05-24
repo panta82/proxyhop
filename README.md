@@ -10,6 +10,8 @@ proxyhop -p 12345 https://api.someapi.com/v1
 
 Then make requests against http://localhost:12345. They will be passed through to https://api.someapi.com/v1. Path and query string will be preserved (eg. http://localhost:12345/a/b/c will translate to https://api.someapi.com/v1/a/b/c)
 
+The proxy will automatically handle your CORS headers, so you can call it from browser just fine.
+
 That's all there is to it.
 
 ### Installation
